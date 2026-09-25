@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: Standardized customer source data.
+    columns:
+      - name: customer_id
+        description: Unique identifier for a customer.
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_orders
+    description: Standardized order source data.
+    columns:
+      - name: order_id
+        description: Unique identifier for an order.
+        tests:
+          - unique
+          - not_null
+      - name: order_status
+        description: Current status of the order.
+        tests:
+          - accepted_values:
+              values:
+                - created
+                - shipped
+                - approved
+                - canceled
+                - invoiced
+                - delivered
+                - processing
+                - unavailable
+      - name: customer_id
+        description: Customer identifier associated with the order.
+        tests:
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+
+  - name: stg_order_items
+    description: Raw order-line data exposed as a staging model.
+
+  - name: stg_products
+    description: Raw product data exposed as a staging model.
